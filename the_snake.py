@@ -42,9 +42,9 @@ clock = pg.time.Clock()
 class GameObject:
     """Базовый класс для игровых объектов."""
 
-    def __init__(self, position=None, body_color=None):
+    def __init__(self, position=CENTER_POSITION, body_color=None):
         """Задает начальную позицию и цвет объекта."""
-        self.position = position or CENTER_POSITION
+        self.position = position
         self.body_color = body_color
 
     def draw(self):
@@ -67,24 +67,23 @@ class Apple(GameObject):
         self,
         position=None,
         body_color=APPLE_COLOR,
-        snake_positions=None
+        occupied_positions=None
     ):
         """Инициализирует цвет и случайное положение яблока."""
         super().__init__(position, body_color)
-        self.randomize_position(snake_positions)
+        self.randomize_position(occupied_positions)
 
-    def randomize_position(self, snake_positions=None):
+    def randomize_position(self, occupied_positions=None):
         """Генерирует новые случайные координаты для яблока."""
-        if snake_positions is None:
-            snake_positions = [CENTER_POSITION]
+        if occupied_positions is None:
+            occupied_positions = []
 
         while True:
             x = randint(0, GRID_WIDTH - 1) * GRID_SIZE
             y = randint(0, GRID_HEIGHT - 1) * GRID_SIZE
-            new_position = (x, y)
+            self.position = (x, y)
 
-            if new_position not in snake_positions:
-                self.position = new_position
+            if self.position not in occupied_positions:
                 break
 
     def draw(self):
@@ -95,9 +94,9 @@ class Apple(GameObject):
 class Snake(GameObject):
     """Класс змейки с логикой ее движения и роста."""
 
-    def __init__(self, body_color=SNAKE_COLOR):
+    def __init__(self, position=CENTER_POSITION, body_color=SNAKE_COLOR):
         """Устанавливает цвет и сбрасывает параметры змейки."""
-        super().__init__(position=CENTER_POSITION, body_color=body_color)
+        super().__init__(position=position, body_color=body_color)
         self.reset()
 
     def reset(self):
@@ -164,7 +163,7 @@ def main():
     """Главный цикл игры."""
     pg.init()
     snake = Snake()
-    apple = Apple(position=None, snake_positions=snake.positions)
+    apple = Apple(position=None, occupied_positions=snake.positions)
 
     while True:
         clock.tick(SPEED)
@@ -174,6 +173,7 @@ def main():
         if snake.get_head_position() == apple.position:
             snake.length += 1
             apple.randomize_position(snake.positions)
+
         elif snake.get_head_position() in snake.positions[4:]:
             snake.reset()
             screen.fill(BOARD_BACKGROUND_COLOR)
