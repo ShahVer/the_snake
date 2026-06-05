@@ -1,9 +1,9 @@
 """Игра Змейка на библиотеке Pygame."""
 from random import choice, randint
+import sys
 
 import pygame as pg
 
-import sys
 
 # Константы для размеров поля и сетки:
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
@@ -187,3 +187,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
