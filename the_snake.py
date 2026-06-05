@@ -1,6 +1,6 @@
 """Игра Змейка на библиотеке Pygame."""
-from random import choice, randint
 import sys
+from random import choice, randint
 
 import pygame as pg
 
@@ -187,4 +187,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    
